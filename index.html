@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node.js Chat Demo Client with WebSocket</title>
+  </head>
+  <body>
+    <div id="nick">: <input id="input" type="text" /></div>
+    <script>
+      var name = prompt("Enter your nickname");
+      var nick = document.getElementById("nick");
+      nick.insertAdjacentHTML("afterbegin", name);
+      var input = document.getElementById("input");
+      input.focus();
+      var ws = new WebSocket("ws://" + window.location.host + "/chat", "chat");
+      input.onchange = function() { // works only FF and Chrome
+        ws.send(name + ": " + input.value);
+        input.value = ""; // clear input area
+      }
+      ws.onmessage = function(e) {
+        var div = document.createElement("div");
+        div.appendChild(document.createTextNode(e.data));
+        document.body.insertBefore(div, nick);
+        input.scrollIntoView();
+      };
+    </script>
+  </body>
+</html>
